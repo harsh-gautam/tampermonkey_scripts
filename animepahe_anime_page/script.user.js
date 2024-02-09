@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AnimePahe Anime Manager
 // @namespace    animepahe
-// @version      2024-02-07 V1
+// @version      1.0.1-test
 // @description  try to take over the world!
 // @author       Harsh
 // @match        https://animepahe.ru/anime/*
@@ -54,7 +54,7 @@
         currentAnime = data[animeTitle]
     }
 
-    let watchedEpisode = currentAnime[episodesWatched];
+    let watchedEpisode = currentAnime["episodesWatched"];
 
     // Create the input node
     const episodeParent = document.createElement("span");
