@@ -17,22 +17,20 @@
 
         if(data === undefined || data === null) {
             data = {};
-            data[animeTitle] = {"totalEpisodes": episodeCount, "status": "Watching"};
+            data[animeTitle] = {"totalEpisodes": episodeCount, "episodesWatched": 0, "status": "Watching"};
             alert("Added to watchlist!");
         } else {
             data = JSON.parse(data);
             if (Object.keys(data).find(e => e === animeTitle)) {
                 alert("Already Watching!");
             } else {
-                data[animeTitle] = {"totalEpisodes": episodeCount, "status": "Watching"};
+                data[animeTitle] = {"totalEpisodes": episodeCount, "episodesWatched": 0, "status": "Watching"};
                 alert("Added to watchlist!");
             }
         }
 
         localStorage.setItem("animepahe", JSON.stringify(data));
     }
-
-    let data = localStorage.getItem("animepahe");
 
     // Get the total episode count
     const episodeCountElem = document.querySelector("div.anime-info > p:nth-child(4)").innerText;
@@ -50,11 +48,26 @@
     addNode.style.marginLeft = "10px";
     addNode.style.padding = "5px";
 
+    let data = localStorage.getItem("animepahe");
+    let currentAnime;
+    if(data !== undefined || data !== null) {
+        currentAnime = data[animeTitle]
+    }
+
+    let watchedEpisode = currentAnime[episodesWatched];
+
     // Create the input node
-    const episodeParent = document.createElement("div");
+    const episodeParent = document.createElement("span");
     const episodeInput = document.createElement("input");
     episodeInput.type = "text";
     episodeInput.name = "episode-input";
+    episodeInput.value = watchedEpisode;
+    episodeInput.style.backgroundColor = "black";
+    episodeInput.style.color = "white";
+    episodeInput.style.width = "5%";
+    episodeInput.style.padding = "0";
+    episodeInput.style.textAlign = "center";
+
 
     const episodeTotal = document.createElement("span");
     episodeTotal.textContent = "/" + episodeCount;
@@ -66,7 +79,7 @@
     episodeParent.appendChild(episodeTotal);
     episodeParent.appendChild(episodeIncrease);
 
-    addNode.addEventListener("click", function(){addToWatchList(data, animeTitle, totalEpisodes)});
+    addNode.addEventListener("click", function(){addToWatchList(data, animeTitle, episodeCount)});
 
     japaneseTitle.appendChild(addNode);
     japaneseTitle.appendChild(episodeParent);
