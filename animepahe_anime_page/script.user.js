@@ -17,14 +17,14 @@
 
         if(data === undefined || data === null) {
             data = {};
-            data[animeTitle] = {"totalEpisodes": episodeCount, "episodesWatched": 0, "status": "Watching"};
+            data[animeTitle] = {"totalEpisodes": totalEpisodes, "episodesWatched": 0, "status": "Watching"};
             alert("Added to watchlist!");
         } else {
             data = JSON.parse(data);
             if (Object.keys(data).find(e => e === animeTitle)) {
                 alert("Already Watching!");
             } else {
-                data[animeTitle] = {"totalEpisodes": episodeCount, "episodesWatched": 0, "status": "Watching"};
+                data[animeTitle] = {"totalEpisodes": totalEpisodes, "episodesWatched": 0, "status": "Watching"};
                 alert("Added to watchlist!");
             }
         }
@@ -49,12 +49,20 @@
     addNode.style.padding = "5px";
 
     let data = localStorage.getItem("animepahe");
-    let currentAnime;
-    if(data !== undefined || data !== null) {
-        currentAnime = data[animeTitle]
+    if(data === null) {
+        data = {};
+        localStorage.setItem("animepahe", JSON.stringify(data));
+    } else {
+        data = JSON.parse(data);
     }
 
-    let watchedEpisode = currentAnime["episodesWatched"];
+    let currentAnime;
+    let watchedEpisode = 0;
+    
+    if(Object.keys(data).find(e => e === animeTitle)) {
+        currentAnime = data[animeTitle];
+        watchedEpisode = currentAnime.episodesWatched;
+    }
 
     // Create the input node
     const episodeParent = document.createElement("span");
