@@ -13,20 +13,27 @@
     'use strict';
 
     // Your code here...
-    function addToWatchList(self, data, animeTitle, totalEpisodes, parentNode) {
+    function addToWatchList(self, data, animeId, animeTitle, totalEpisodes, parentNode) {
 
-        data[animeTitle] = {"totalEpisodes": totalEpisodes, "episodesWatched": 0, "status": "Watching"};
+        data[animeId] = {"title": animeTitle, "totalEpisodes": totalEpisodes, "episodesWatched": 0, "status": "Watching"};
         alert("Added to watchlist!");
         localStorage.setItem("animepahe", JSON.stringify(data));
 
         // remove the add to list button and display status
         self.remove();
-        displayStatusButtons(data[animeTitle], parentNode);
+        displayStatusButtons(data[animeId], parentNode);
+    }
+
+    function increaseEpisodeCount(animeId, episodeInput) {
+        data = JSON.parse(localStorage.getItem("animepahe"));
+        data[animeId].episodesWatched = data[animeId].episodesWatched + 1;
+        episodeInput.value = data[animeId].episodesWatched;
+        localStorage.setItem("animepahe", JSON.stringify(data));
     }
 
     function displayStatusButtons(currentAnime, parentNode) {
         // Add watching status
-        const statusText = document.createElement("div")
+        const statusText = document.createElement("div");
         statusText.textContent = currentAnime.status;
         statusText.style = "width: 250px; background-color: #d5015b; color: white; opacity: 0.9; padding: 5px; margin: 0 0 8px 240px; border: 1px solid #d5015b; border-radius: 10px;";
         parentNode.appendChild(statusText);
@@ -47,7 +54,8 @@
 
         const episodeIncrease = document.createElement("i");
         episodeIncrease.classList = "fa fa-plus-circle";
-        episodeIncrease.style = "margin: auto 5px;";
+        episodeIncrease.style = "margin: auto 5px; cursor: pointer;";
+        episodeIncrease.addEventListener("click", function(){ increaseEpisodeCount(animeId, currentAnime, episodeInput)})
 
         episodeParent.appendChild(episodeInput);
         episodeParent.appendChild(episodeTotal);
@@ -65,11 +73,12 @@
     const titleWrapper = document.querySelector("div.title-wrapper > h1 > span");
     const animeTitle = titleWrapper.innerText;
 
-    // Add the Add to watchlist button to DOM
+    // Get the myanimelist link
+    const malLink = document.querySelector("p.external-links").lastElementChild.href;
+    const animeId = malLink.split("/")[4];
+
     let parentNode = document.querySelector('div.title-wrapper');
-    // if (parentNode === null) {
-    //     parentNode = document.querySelector("div.title-wrapper > h1");
-    // } 
+
 
     let data = localStorage.getItem("animepahe");
     if(data === null) {
@@ -81,9 +90,9 @@
 
     let watchedEpisode = 0;
     
-    if(Object.keys(data).find(e => e === animeTitle)) {
+    if(Object.keys(data).find(e => e === animeId)) {
 
-        let currentAnime = data[animeTitle];
+        let currentAnime = data[animeId];
         displayStatusButtons(currentAnime, parentNode);
         // displayRemoveButton(currentAnime, parentNode);
 
@@ -91,7 +100,7 @@
         const addButton = document.createElement("button");
         addButton.textContent = "Add to list";
         addButton.style = "width: 250px; background-color: #d5015b; color: white; opacity: 0.9; padding: 5px; margin: 0 0 8px 240px; border: 1px solid #d5015b; border-radius: 10px;"; 
-        addButton.addEventListener("click", function(){addToWatchList(addButton, data, animeTitle, episodeCount, parentNode)});
+        addButton.addEventListener("click", function(){addToWatchList(addButton, data, animeId, animeTitle, episodeCount, parentNode)});
         parentNode.appendChild(addButton);
     }
 
