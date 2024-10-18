@@ -27,6 +27,9 @@
     function increaseEpisodeCount(animeId) {
         data = JSON.parse(localStorage.getItem("animepahe"));
         data[animeId].episodesWatched = data[animeId].episodesWatched + 1;
+        if(data[animeId].episodesWatched === data[animeId].totalEpisodes) {
+            data[animeId].status = "Completed";
+        }
         let episodeInput = document.querySelector("#episode-input");
         episodeInput.value = data[animeId].episodesWatched;
         localStorage.setItem("animepahe", JSON.stringify(data));
