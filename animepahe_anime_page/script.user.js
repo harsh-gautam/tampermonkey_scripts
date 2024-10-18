@@ -9,8 +9,19 @@
 // @grant        none
 // ==/UserScript==
 
-(function() {
+(async function() {
     'use strict';
+
+    function updateEpisodesAndStatus(animeId, episodeCount) {
+        data = JSON.parse(localStorage.getItem("animepahe"));
+        if(data[animeId].totalEpisodes == null) {
+            data[animeId].totalEpisodes = episodeCount;
+        }
+        if(data[animeId].totalEpisodes === data[animeId].episodesWatched && data[animeId].status !== "Completed") {
+            data[animeId].status = "Completed";
+        }
+        localStorage.setItem("animepahe", JSON.stringify(data));
+    }
 
     // Your code here...
     function addToWatchList(self, data, animeId, animeTitle, totalEpisodes, parentNode) {
@@ -26,9 +37,12 @@
 
     function increaseEpisodeCount(animeId) {
         data = JSON.parse(localStorage.getItem("animepahe"));
-        data[animeId].episodesWatched = data[animeId].episodesWatched + 1;
-        if(data[animeId].episodesWatched === data[animeId].totalEpisodes) {
+        
+        if(data[animeId].episodesWatched >= data[animeId].totalEpisodes) {
             data[animeId].status = "Completed";
+            return
+        } else {
+            data[animeId].episodesWatched = data[animeId].episodesWatched + 1;
         }
         let episodeInput = document.querySelector("#episode-input");
         episodeInput.value = data[animeId].episodesWatched;
@@ -117,6 +131,7 @@
         let currentAnime = data[animeId];
         displayStatusButtons(animeId, currentAnime, parentNode);
         // displayRemoveButton(currentAnime, parentNode);
+        updateEpisodesAndStatus(animeId, episodeCount);
 
     } else {
         const addButton = document.createElement("button");
