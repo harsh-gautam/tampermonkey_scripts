@@ -52,11 +52,25 @@
         episodeInput.value = currentAnime.episodesWatched;
         episodeInput.style = "width: 20%; background-color: black; color: white; padding: 0; margin: auto 5px; text-align: center; border: 1px solid white; border-radius: 10px;";
 
+        episodeInput.addEventListener("input", () => {
+            let value = parseInt(episodeInput.value);
+            if(typeof(value) != "number" || value > episodeCount) {
+                // do nothing
+            } else {
+                data = JSON.parse(localStorage.getItem("animepahe"));
+                data[animeId].episodesWatched = value;
+                if(data[animeId].episodesWatched === data[animeId].totalEpisodes) {
+                    data[animeId].status = "Completed";
+                }
+                localStorage.setItem("animepahe", JSON.stringify(data));
+            }
+        })
+
 
         const episodeTotal = document.createElement("span");
         episodeTotal.textContent = "/ " + episodeCount;
 
-
+        // Add increase count button
         const episodeIncrease = document.createElement("i");
         episodeIncrease.classList = "fa fa-plus-circle";
         episodeIncrease.style = "margin: auto 5px; cursor: pointer;";
