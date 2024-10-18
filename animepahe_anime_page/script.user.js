@@ -14,6 +14,10 @@
 
     function updateEpisodesAndStatus(animeId, episodeCount) {
         data = JSON.parse(localStorage.getItem("animepahe"));
+        
+        if(data[animeId].id === undefined) {
+            data[animeId].id = document.querySelector('meta[name="id"]').getAttribute('content');
+        }
         if(data[animeId].totalEpisodes == null) {
             data[animeId].totalEpisodes = episodeCount;
         }
